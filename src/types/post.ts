@@ -7,6 +7,9 @@ export interface Post {
 }
 
 export interface PostsState {
+  posts: Post[];
+  loading: boolean;
+  error: string | null;
   searchTerm: string;
   currentPage: number;
   postsPerPage: number;

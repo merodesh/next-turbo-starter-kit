@@ -1,7 +1,7 @@
 
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { PostsState } from '@/types/post';
-import { PAGINATION_CONSTANTS } from '@/constants/api';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { Post, PostsState } from '@/types/post';
+import { PAGINATION_CONSTANTS, API_BASE_URL, API_ENDPOINTS } from '@/constants/api';
 
 // Load persisted state from localStorage
 const loadPersistedState = (): Partial<PostsState> => {
@@ -26,15 +26,35 @@ const saveStateToLocalStorage = (state: PostsState) => {
   }
 };
 
+// Async thunk for fetching posts
+export const fetchPosts = createAsyncThunk(
+  'posts/fetchPosts',
+  async () => {
+    const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.POSTS}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch posts');
+    }
+    const data: Post[] = await response.json();
+    return data;
+  }
+);
+
 const persistedState = loadPersistedState();
 
 const initialState: PostsState = {
+  posts: [],
+  loading: false,
+  error: null,
   searchTerm: '',
   currentPage: 1,
   postsPerPage: PAGINATION_CONSTANTS.DEFAULT_PAGE_SIZE,
   sortField: null,
   sortDirection: 'asc',
   ...persistedState,
+  // Don't persist loading and error states
+  loading: false,
+  error: null,
+  posts: [],
 };
 
 const postsSlice = createSlice({
@@ -67,6 +87,22 @@ const postsSlice = createSlice({
       state.sortDirection = 'asc';
       saveStateToLocalStorage(state);
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchPosts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchPosts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.posts = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchPosts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to fetch posts';
+      });
   },
 });
 

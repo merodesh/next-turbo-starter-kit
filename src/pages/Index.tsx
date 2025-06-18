@@ -1,8 +1,8 @@
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetPostsQuery } from '@/store/api/postsApi';
-import { useAppSelector } from '@/store/hooks';
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { fetchPosts } from '@/store/slices/postsSlice';
 import PostsTable from '@/components/PostsTable';
 import PostsFilter from '@/components/PostsFilter';
 import PostsPagination from '@/components/PostsPagination';
@@ -10,10 +10,22 @@ import LanguageSelector from '@/components/LanguageSelector';
 
 const Index = () => {
   const { t } = useTranslation();
-  const { data: posts = [], error, isLoading } = useGetPostsQuery();
-  const { searchTerm, currentPage, postsPerPage, sortField, sortDirection } = useAppSelector(
-    (state) => state.posts
-  );
+  const dispatch = useAppDispatch();
+  const { 
+    posts, 
+    loading, 
+    error, 
+    searchTerm, 
+    currentPage, 
+    postsPerPage, 
+    sortField, 
+    sortDirection 
+  } = useAppSelector((state) => state.posts);
+
+  // Fetch posts on component mount
+  useEffect(() => {
+    dispatch(fetchPosts());
+  }, [dispatch]);
 
   const filteredPosts = useMemo(() => {
     if (!searchTerm) return posts;
@@ -60,7 +72,7 @@ const Index = () => {
             {t('posts.error')}
           </h1>
           <p className="text-muted-foreground">
-            {error && 'data' in error ? String(error.data) : 'An error occurred'}
+            {error}
           </p>
         </div>
       </div>
@@ -77,7 +89,7 @@ const Index = () => {
         
         <PostsFilter />
         
-        <PostsTable posts={paginatedPosts} loading={isLoading} />
+        <PostsTable posts={paginatedPosts} loading={loading} />
         
         <PostsPagination totalPosts={sortedPosts.length} />
       </div>
