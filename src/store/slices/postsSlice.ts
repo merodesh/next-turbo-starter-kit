@@ -55,7 +55,7 @@ const postsSlice = createSlice({
       state.currentPage = 1;
       saveStateToLocalStorage(state);
     },
-    setSortField: (state, action: PayloadAction<{ field: keyof Post; direction: 'asc' | 'desc' }>) => {
+    setSortField: (state, action: PayloadAction<{ field: 'id' | 'title' | 'body' | 'userId'; direction: 'asc' | 'desc' }>) => {
       state.sortField = action.payload.field;
       state.sortDirection = action.payload.direction;
       saveStateToLocalStorage(state);

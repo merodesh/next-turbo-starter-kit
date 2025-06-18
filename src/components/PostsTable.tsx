@@ -1,5 +1,5 @@
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Table,
@@ -24,43 +24,7 @@ interface PostsTableProps {
 const PostsTable: React.FC<PostsTableProps> = ({ posts, loading }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const { sortField, sortDirection, searchTerm } = useAppSelector((state) => state.posts);
-
-  const sortedAndFilteredPosts = useMemo(() => {
-    let filteredPosts = posts;
-
-    // Apply search filter
-    if (searchTerm) {
-      filteredPosts = posts.filter(
-        (post) =>
-          post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          post.body.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          post.id.toString().includes(searchTerm) ||
-          post.userId.toString().includes(searchTerm)
-      );
-    }
-
-    // Apply sorting
-    if (sortField) {
-      filteredPosts = [...filteredPosts].sort((a, b) => {
-        const aValue = a[sortField];
-        const bValue = b[sortField];
-        
-        if (typeof aValue === 'string' && typeof bValue === 'string') {
-          const comparison = aValue.localeCompare(bValue);
-          return sortDirection === 'asc' ? comparison : -comparison;
-        }
-        
-        if (typeof aValue === 'number' && typeof bValue === 'number') {
-          return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
-        }
-        
-        return 0;
-      });
-    }
-
-    return filteredPosts;
-  }, [posts, searchTerm, sortField, sortDirection]);
+  const { sortField, sortDirection } = useAppSelector((state) => state.posts);
 
   const handleSort = (field: keyof Post) => {
     const newDirection = 
@@ -95,7 +59,7 @@ const PostsTable: React.FC<PostsTableProps> = ({ posts, loading }) => {
     );
   }
 
-  if (sortedAndFilteredPosts.length === 0) {
+  if (posts.length === 0) {
     return (
       <Card>
         <CardContent className="flex justify-center items-center py-8">
@@ -127,7 +91,7 @@ const PostsTable: React.FC<PostsTableProps> = ({ posts, loading }) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {sortedAndFilteredPosts.map((post) => (
+              {posts.map((post) => (
                 <TableRow key={post.id}>
                   <TableCell className="font-medium">{post.id}</TableCell>
                   <TableCell className="font-semibold">

@@ -60,7 +60,7 @@ const Index = () => {
             {t('posts.error')}
           </h1>
           <p className="text-muted-foreground">
-            {error && 'data' in error ? error.data as string : 'An error occurred'}
+            {error && 'data' in error ? String(error.data) : 'An error occurred'}
           </p>
         </div>
       </div>

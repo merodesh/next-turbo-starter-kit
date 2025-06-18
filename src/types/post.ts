@@ -10,13 +10,6 @@ export interface PostsState {
   searchTerm: string;
   currentPage: number;
   postsPerPage: number;
-  sortField: keyof Post | null;
+  sortField: 'id' | 'title' | 'body' | 'userId' | null;
   sortDirection: 'asc' | 'desc';
-}
-
-export interface PostsFilters {
-  searchTerm: string;
-  userId?: number;
-  sortField?: keyof Post;
-  sortDirection?: 'asc' | 'desc';
 }
