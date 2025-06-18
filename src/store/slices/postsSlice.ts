@@ -41,6 +41,9 @@ export const fetchPosts = createAsyncThunk(
 
 const persistedState = loadPersistedState();
 
+// Extract properties that should not be persisted
+const { loading: persistedLoading, error: persistedError, ...persistedStateToUse } = persistedState;
+
 const initialState: PostsState = {
   posts: [],
   loading: false,
@@ -50,8 +53,8 @@ const initialState: PostsState = {
   postsPerPage: PAGINATION_CONSTANTS.DEFAULT_PAGE_SIZE,
   sortField: null,
   sortDirection: 'asc',
-  ...persistedState,
-  // Override these properties to ensure they start fresh
+  ...persistedStateToUse,
+  // Always start fresh with these properties
   loading: false,
   error: null,
 };
