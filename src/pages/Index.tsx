@@ -1,8 +1,7 @@
-
 import React, { useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { fetchPosts } from '@/store/slices/postsSlice';
+import { fetchPosts } from '@/store/api/postsApi';
 import PostsTable from '@/components/PostsTable';
 import PostsFilter from '@/components/PostsFilter';
 import PostsPagination from '@/components/PostsPagination';

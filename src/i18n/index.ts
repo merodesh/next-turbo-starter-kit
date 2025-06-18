@@ -5,8 +5,6 @@ import en from './locales/en.json';
 import es from './locales/es.json';
 import ar from './locales/ar.json';
 
-const savedLanguage = localStorage.getItem('language') || 'en';
-
 i18n
   .use(initReactI18next)
   .init({
@@ -21,20 +19,16 @@ i18n
         translation: ar,
       },
     },
-    lng: savedLanguage,
+    lng: 'en', // Default language, will be overridden by Redux
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false,
     },
   });
 
-// Save language preference on change
+// Handle language change for RTL direction
 i18n.on('languageChanged', (lng) => {
-  localStorage.setItem('language', lng);
   document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr';
 });
-
-// Set initial direction
-document.documentElement.dir = savedLanguage === 'ar' ? 'rtl' : 'ltr';
 
 export default i18n;

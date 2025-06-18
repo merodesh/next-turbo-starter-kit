@@ -1,6 +1,7 @@
 
 import { Provider } from 'react-redux';
-import { store } from '@/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from '@/store';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,16 +12,18 @@ import '@/i18n';
 
 const App = () => (
   <Provider store={store}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <PersistGate loading={null} persistor={persistor}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </PersistGate>
   </Provider>
 );
 
