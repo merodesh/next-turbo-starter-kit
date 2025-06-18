@@ -26,7 +26,37 @@ const PostsPagination: React.FC<PostsPaginationProps> = ({ totalPosts }) => {
   const endResult = Math.min(currentPage * postsPerPage, totalPosts);
 
   const handlePageChange = (page: number) => {
-    dispatch(setCurrentPage(page));
+    if (page >= 1 && page <= totalPages) {
+      dispatch(setCurrentPage(page));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // Generate page numbers to show
+  const getVisiblePages = () => {
+    const delta = 2;
+    const range = [];
+    const rangeWithDots = [];
+
+    for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+      range.push(i);
+    }
+
+    if (currentPage - delta > 2) {
+      rangeWithDots.push(1, '...');
+    } else {
+      rangeWithDots.push(1);
+    }
+
+    rangeWithDots.push(...range);
+
+    if (currentPage + delta < totalPages - 1) {
+      rangeWithDots.push('...', totalPages);
+    } else if (totalPages > 1) {
+      rangeWithDots.push(totalPages);
+    }
+
+    return rangeWithDots;
   };
 
   if (totalPages <= 1) return null;
@@ -40,6 +70,7 @@ const PostsPagination: React.FC<PostsPaginationProps> = ({ totalPosts }) => {
           total: totalPosts,
         })}
       </div>
+      
       <Pagination>
         <PaginationContent>
           <PaginationItem>
@@ -52,17 +83,23 @@ const PostsPagination: React.FC<PostsPaginationProps> = ({ totalPosts }) => {
               }
             />
           </PaginationItem>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <PaginationItem key={page}>
-              <PaginationLink
-                onClick={() => handlePageChange(page)}
-                isActive={currentPage === page}
-                className="cursor-pointer"
-              >
-                {page}
-              </PaginationLink>
+          
+          {getVisiblePages().map((page, index) => (
+            <PaginationItem key={index}>
+              {page === '...' ? (
+                <span className="px-4 py-2">...</span>
+              ) : (
+                <PaginationLink
+                  onClick={() => handlePageChange(page as number)}
+                  isActive={currentPage === page}
+                  className="cursor-pointer"
+                >
+                  {page}
+                </PaginationLink>
+              )}
             </PaginationItem>
           ))}
+          
           <PaginationItem>
             <PaginationNext
               onClick={() => handlePageChange(currentPage + 1)}
