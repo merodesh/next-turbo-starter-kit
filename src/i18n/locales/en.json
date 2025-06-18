@@ -1,0 +1,22 @@
+
+{
+  "posts": {
+    "title": "Posts",
+    "search": "Search posts...",
+    "id": "ID",
+    "postTitle": "Title",
+    "body": "Body",
+    "userId": "User ID",
+    "loading": "Loading posts...",
+    "error": "Error loading posts",
+    "noResults": "No posts found",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of",
+    "showingResults": "Showing {{start}} to {{end}} of {{total}} results"
+  },
+  "common": {
+    "language": "Language"
+  }
+}

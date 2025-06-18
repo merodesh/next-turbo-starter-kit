@@ -1,0 +1,22 @@
+
+{
+  "posts": {
+    "title": "Publicaciones",
+    "search": "Buscar publicaciones...",
+    "id": "ID",
+    "postTitle": "Título",
+    "body": "Contenido",
+    "userId": "ID de Usuario",
+    "loading": "Cargando publicaciones...",
+    "error": "Error al cargar publicaciones",
+    "noResults": "No se encontraron publicaciones",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página",
+    "of": "de",
+    "showingResults": "Mostrando {{start}} a {{end}} de {{total}} resultados"
+  },
+  "common": {
+    "language": "Idioma"
+  }
+}
