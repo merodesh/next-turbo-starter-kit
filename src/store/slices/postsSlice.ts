@@ -51,10 +51,9 @@ const initialState: PostsState = {
   sortField: null,
   sortDirection: 'asc',
   ...persistedState,
-  // Don't persist loading and error states
+  // Override these properties to ensure they start fresh
   loading: false,
   error: null,
-  posts: [],
 };
 
 const postsSlice = createSlice({
